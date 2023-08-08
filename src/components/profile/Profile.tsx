@@ -1,9 +1,12 @@
 import { styled } from 'styled-components';
 import { StarIcon_1, TeacherImg2 } from '../../assets';
+import { useEffect } from "react";
+import { auth } from '../../firebase';
+import { useRecoilValue } from 'recoil';
+import { UserInfoState } from '../../atom/UserInfo';
 
 export default function Profile() {
-  let arr1 = ["평균 별점", "내가 올린 모아", "내가 신청한 모아"];
-  let arr2 = [4.2, 12, 6];
+  const user = useRecoilValue(UserInfoState);
   
   const handleProfileModify = () => {
     console.log("프로필 수정");
@@ -13,21 +16,18 @@ export default function Profile() {
     <St.ProfileWrapper>
       <St.ProfileContainer>
         <St.ImageContainer>
-          <TeacherImg2/>
+          <St.ProfileImage src={user.imageUrl}/>
         </St.ImageContainer>
-        <St.NameContainer>
-          준희 아빠
-        </St.NameContainer>
-        <St.ProfileModifyButtonContainer>
+        <St.NameContainer>{user.name} {user.gender == "man" ? `아빠` : `엄마`}</St.NameContainer>
+        <St.ProfileModifyButtonContainer onClick={handleProfileModify}>
           프로필 수정
         </St.ProfileModifyButtonContainer>
       </St.ProfileContainer>
 
       <St.ProfileInfoContainer>
         <St.InfoContainer>
-          <St.ValueContainer>
-              4.2 / 5
-          </St.ValueContainer>
+          <St.ValueContainer>4.2 / 5</St.ValueContainer>
+          {/* <St.ValueContainer>{user.rating === null ? `-` : `${user.rating}`} / 5</St.ValueContainer> */}
           <St.KeyContainer>
             <StarIcon_1 />
             <St.Rating>평균 별점</St.Rating>
@@ -72,6 +72,14 @@ const St = {
   `,
   ImageContainer: styled.div`
     margin: 0.7rem 0;
+  `,
+  ProfileImage: styled.img`
+    width: 9rem;
+    height: 9rem;
+
+    border-radius: 50%;
+
+    object-fit: cover;
   `,
   NameContainer: styled.div`
     margin: 0.7rem 0;
