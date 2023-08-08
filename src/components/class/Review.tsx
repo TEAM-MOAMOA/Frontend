@@ -72,7 +72,7 @@ const St = {
     
     border-radius: 50%;
     
-    object-fit: cover; /
+    object-fit: cover;
   `,
   ReviewNickname: styled.div`
   ${({ theme }) => theme.fonts.body07};
