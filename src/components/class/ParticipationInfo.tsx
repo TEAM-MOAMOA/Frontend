@@ -21,7 +21,7 @@ const ParticipationInfo = () => {
         <>
           <St.ParticipationInfoContainer>
             <St.ParticipationInfoText> 현재 참여현황 ({data.participants}/{data.maxParticipants})</St.ParticipationInfoText>
-            <St.ParticipationInfoPrice>{data.price}원</St.ParticipationInfoPrice>
+            <St.ParticipationInfoPrice>{(data.price).toLocaleString()}원</St.ParticipationInfoPrice>
           </St.ParticipationInfoContainer>
           <St.ParticipationButtonContainer>
             {data.user.id !== userId ? 

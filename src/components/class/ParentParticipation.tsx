@@ -1,21 +1,28 @@
 import { ClassInfoState } from "../../atom/ClassInfo";
 import Modal from "../common/Modal";
 import { styled } from "styled-components";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useState } from "react";
+import { UserInfoState } from "../../atom/UserInfo";
 
 export default function ParentParticipation() {
   const [data, setData] = useRecoilState(ClassInfoState);
+  const userId = useRecoilValue(UserInfoState);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isApplied, setIsApplied] = useState("false");
   const [modalType, setModalType] = useState("");
 
+  const formData = {
+    lectureId: data.id,
+    userId: userId,
+  }
+
   const handleCloseModal = () => {
     setModalOpen(false);
   };
 
-  const handleApplication = () => {
+  const handleApplication = async () => {
     if (isApplied === "true") {
       setModalType("cancel");
     } else {
@@ -24,20 +31,53 @@ export default function ParentParticipation() {
           ...data,
           participants: data.participants + 1
         }));
-        setIsApplied("true");
-        setModalType("apply");
+        try {
+          const response = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/api/apply`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json", 
+            },
+            body: JSON.stringify(formData),
+          });
+          
+          const responseData = await response.json();
+          console.log("Class Apply Response: ", responseData);  
+
+          setIsApplied("true");
+          setModalType("apply");
+    
+        } catch (error) {
+          console.error("Error submitting data:", error);
+        } 
       }
     }
     setModalOpen(true);
   };
 
-  const handleCancelApplication = () => {
+  const handleCancelApplication = async () => {
     setData((data) => ({
       ...data,
       participants: data.participants - 1
     }));
-    setIsApplied("false");
-    setModalOpen(false);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/api/apply`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json", 
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      const responseData = await response.json();
+      console.log("Class Cancel Response: ", responseData);  
+
+      setIsApplied("false");
+      setModalOpen(false);
+
+    } catch (error) {
+      console.error("Error submitting data:", error);
+    }
   };
 
   return (
