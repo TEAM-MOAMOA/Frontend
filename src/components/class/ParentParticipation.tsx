@@ -2,7 +2,7 @@ import { ClassInfoState } from "../../atom/ClassInfo";
 import Modal from "../common/Modal";
 import { styled } from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserInfoState } from "../../atom/UserInfo";
 
 export default function ParentParticipation() {
@@ -17,6 +17,11 @@ export default function ParentParticipation() {
     lectureId: data.id,
     userId: userId,
   }
+
+  // useEffect(()=>{
+  //   if(data.isApplied === 1) isApplied("true");
+  //   else isApplied("false");
+  // })
 
   const handleCloseModal = () => {
     setModalOpen(false);
